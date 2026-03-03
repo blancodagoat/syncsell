@@ -37,3 +37,5 @@ npm run dev
 - Free trial: 14 days
 - $19-29/month for 1-2 channels
 - $39-49/month for 3+ channels
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Q5Q668VS3)
