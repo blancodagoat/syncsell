@@ -7,8 +7,9 @@ export const revalidate = 0;
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { channel?: string; q?: string };
+  searchParams: Promise<{ channel?: string; q?: string }>;
 }) {
+  const params = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
@@ -24,15 +25,15 @@ export default async function ProductsPage({
     .select('*, channel_connection:channel_connections(channel_type, shop_domain)')
     .in('connection_id', connections?.map(c => c.id) ?? []);
 
-  if (searchParams.channel) {
-    const conn = connections?.find(c => c.channel_type === searchParams.channel);
+  if (params.channel) {
+    const conn = connections?.find(c => c.channel_type === params.channel);
     if (conn) {
       query = query.eq('connection_id', conn.id);
     }
   }
 
-  if (searchParams.q) {
-    const searchTerm = `%${searchParams.q}%`;
+  if (params.q) {
+    const searchTerm = `%${params.q}%`;
     query = query.or(`title.ilike.${searchTerm},sku.ilike.${searchTerm}`);
   }
 
@@ -52,13 +53,13 @@ export default async function ProductsPage({
       <form method="GET" className="flex gap-2 mb-5">
         <input
           name="q"
-          defaultValue={searchParams.q}
+          defaultValue={params.q}
           placeholder="Search by title or SKU..."
           className="border rounded-lg px-3 py-2 text-sm flex-1 max-w-xs"
         />
         <select 
           name="channel" 
-          defaultValue={searchParams.channel ?? ''}
+          defaultValue={params.channel ?? ''}
           className="border rounded-lg px-3 py-2 text-sm"
         >
           <option value="">All channels</option>
@@ -83,7 +84,7 @@ export default async function ProductsPage({
       ) : !products || products.length === 0 ? (
         <div className="bg-white border border-neutral-200 rounded-lg p-8 text-center">
           <p className="text-neutral-500 text-sm mb-4">No products found.</p>
-          <button className="text-primary-600 hover:underline text-sm">
+          <button disabled className="text-primary-600 opacity-50 cursor-not-allowed text-sm">
             Sync products from your channels
           </button>
         </div>

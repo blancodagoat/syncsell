@@ -17,7 +17,11 @@ export default function ConnectShopifyPage() {
     setError(null);
     setLoading(true);
 
-    const domain = shopDomain.toLowerCase().replace(/[^a-z0-9.-]/g, '').replace(/^https?:\/\//, '');
+    const domain = shopDomain
+      .trim()
+      .toLowerCase()
+      .replace(/^https?:\/\//, '')
+      .replace(/[^a-z0-9.-]/g, '');
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
@@ -26,23 +30,8 @@ export default function ConnectShopifyPage() {
       return;
     }
 
-    const { error: insertError } = await supabase
-      .from('channel_connections')
-      .insert({
-        user_id: user.id,
-        channel_type: 'shopify',
-        shop_domain: domain,
-        access_token: 'pending_oauth',
-      })
-      .select()
-      .single();
-
-    if (insertError) {
-      setError(insertError.message);
-      setLoading(false);
-      return;
-    }
-
+    // TODO: OAuth callback at /api/shopify/callback needs to be implemented
+    // The callback should handle the DB insert after successful OAuth exchange
     await initiateOAuth('shopify', domain, '');
   }
 

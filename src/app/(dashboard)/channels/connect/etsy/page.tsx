@@ -17,6 +17,20 @@ export default function ConnectEtsyPage() {
     setError(null);
     setLoading(true);
 
+    // TODO: API key should be stored via a server-side API route with encryption,
+    // not directly from the client. This is a known security issue.
+    if (apiKey.trim().length < 10 || apiKey.trim().length > 256) {
+      setError('API key must be between 10 and 256 characters');
+      setLoading(false);
+      return;
+    }
+
+    if (shopName.trim().length < 2) {
+      setError('Shop name must be at least 2 characters');
+      setLoading(false);
+      return;
+    }
+
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       setError('Not authenticated');
@@ -29,8 +43,8 @@ export default function ConnectEtsyPage() {
       .insert({
         user_id: user.id,
         channel_type: 'etsy',
-        shop_domain: shopName,
-        access_token: apiKey,
+        shop_domain: shopName.trim(),
+        access_token: apiKey.trim(),
       });
 
     setLoading(false);
