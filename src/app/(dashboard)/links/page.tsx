@@ -10,7 +10,7 @@ interface LinkTarget {
 export const revalidate = 30;
 
 export default async function LinksPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 

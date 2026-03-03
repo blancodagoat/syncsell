@@ -51,6 +51,7 @@ export default function NewLinkPage() {
       setLoading(false);
     }
     loadConnections();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -64,6 +65,7 @@ export default function NewLinkPage() {
       setSourceProducts(data || []);
     }
     loadProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceConnectionId]);
 
   useEffect(() => {
@@ -77,6 +79,7 @@ export default function NewLinkPage() {
       setTargetProducts(data || []);
     }
     loadProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetConnectionId]);
 
   async function handleSubmit(e: React.FormEvent) {

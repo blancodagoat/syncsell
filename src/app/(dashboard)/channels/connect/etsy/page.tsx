@@ -48,7 +48,7 @@ export default function ConnectEtsyPage() {
     <div className="max-w-md mx-auto">
       <h1 className="text-2xl font-semibold mb-2">Connect Etsy</h1>
       <p className="text-neutral-500 text-sm mb-6">
-        Enter your Etsy API key and shop name to connect.
+        Link your Etsy shop to sync inventory.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">

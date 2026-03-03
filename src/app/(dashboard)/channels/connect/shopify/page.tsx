@@ -50,7 +50,7 @@ export default function ConnectShopifyPage() {
     <div className="max-w-md mx-auto">
       <h1 className="text-2xl font-semibold mb-2">Connect Shopify</h1>
       <p className="text-neutral-500 text-sm mb-6">
-        Enter your Shopify store domain to connect.
+        Link your Shopify store to sync inventory.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">

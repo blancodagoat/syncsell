@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
+import { ShoppingCart, Store } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 export const revalidate = 60;
@@ -8,19 +9,19 @@ const CHANNELS = [
   { 
     type: 'shopify', 
     name: 'Shopify', 
-    description: 'Connect your Shopify store via OAuth',
-    icon: '🛒',
+    description: 'Connect your Shopify store',
+    icon: ShoppingCart,
   },
   { 
     type: 'etsy', 
     name: 'Etsy', 
-    description: 'Connect your Etsy shop using API key',
-    icon: '🏪',
+    description: 'Connect your Etsy shop',
+    icon: Store,
   },
 ];
 
 export default async function ChannelsPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
@@ -42,7 +43,7 @@ export default async function ChannelsPage() {
           return (
             <div key={channel.type} className="bg-white rounded-lg border border-neutral-200 p-6">
               <div className="flex items-start gap-4">
-                <span className="text-3xl">{channel.icon}</span>
+                <channel.icon className="w-8 h-8 text-primary-600" />
                 <div className="flex-1">
                   <h3 className="font-medium text-lg">{channel.name}</h3>
                   <p className="text-sm text-neutral-500 mb-4">{channel.description}</p>
