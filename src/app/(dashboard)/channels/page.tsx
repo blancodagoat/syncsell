@@ -25,11 +25,13 @@ export default async function ChannelsPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  const { data: connections } = await supabase
+  const { data: connections, error: connError } = await supabase
     .from('channel_connections')
     .select('*')
     .eq('user_id', user.id)
     .eq('is_active', true);
+
+  if (connError) return <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">Failed to load channels. Please try again.</div>;
 
   const connectedTypes = new Set(connections?.map(c => c.channel_type) ?? []);
 
@@ -50,7 +52,7 @@ export default async function ChannelsPage() {
                   {isConnected ? (
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-green-600 font-medium">Connected</span>
-                      <button className="text-sm text-neutral-500 hover:text-neutral-700">
+                      <button disabled title="Coming soon" className="text-sm text-neutral-500 opacity-50 cursor-not-allowed">
                         Disconnect
                       </button>
                     </div>
@@ -72,7 +74,7 @@ export default async function ChannelsPage() {
       {connections && connections.length > 0 && (
         <div>
           <h2 className="text-lg font-medium mb-4">Connected Channels</h2>
-          <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
+          <div className="bg-white rounded-lg border border-neutral-200 overflow-x-auto">
             <table className="w-full">
               <thead className="bg-neutral-50 border-b border-neutral-200">
                 <tr>

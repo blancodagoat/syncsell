@@ -14,7 +14,7 @@ export default async function LinksPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  const { data: links } = await supabase
+  const { data: links, error: linksError } = await supabase
     .from('product_links')
     .select(`
       *,
@@ -29,11 +29,13 @@ export default async function LinksPage() {
     .eq('is_active', true)
     .order('created_at', { ascending: false });
 
-  const { data: connections } = await supabase
+  const { data: connections, error: connError } = await supabase
     .from('channel_connections')
     .select('id, channel_type, shop_domain')
     .eq('user_id', user.id)
     .eq('is_active', true);
+
+  if (linksError || connError) return <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">Failed to load data. Please try again.</div>;
 
   return (
     <div>
@@ -109,10 +111,10 @@ export default async function LinksPage() {
                   </div>
 
                   <div className="flex gap-2">
-                    <button className="px-3 py-1 text-sm border rounded hover:bg-neutral-50">
+                    <button disabled title="Coming soon" className="px-3 py-1 text-sm border rounded opacity-50 cursor-not-allowed">
                       Sync Now
                     </button>
-                    <button className="px-3 py-1 text-sm text-neutral-500 hover:text-neutral-700">
+                    <button disabled title="Coming soon" className="px-3 py-1 text-sm text-neutral-500 opacity-50 cursor-not-allowed">
                       Edit
                     </button>
                   </div>

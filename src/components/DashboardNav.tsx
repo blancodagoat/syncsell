@@ -26,15 +26,15 @@ export default function DashboardNav({ userEmail }: { userEmail: string }) {
     <header className="border-b border-neutral-200 bg-white">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <nav className="flex gap-6">
-          <Link href="/dashboard" className="font-semibold text-primary-600">
+          <Link href="/dashboard" className="font-semibold text-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-300 rounded">
             Inventory Sync
           </Link>
           {nav.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
-              className={`text-sm ${
-                pathname === href ? 'text-neutral-900 font-medium' : 'text-neutral-500 hover:text-neutral-700'
+              className={`text-sm focus:outline-none focus:ring-2 focus:ring-primary-300 rounded ${
+                (pathname === href || (href !== '/dashboard' && pathname.startsWith(href))) ? 'text-neutral-900 font-medium' : 'text-neutral-500 hover:text-neutral-700'
               }`}
             >
               {label}
@@ -45,7 +45,7 @@ export default function DashboardNav({ userEmail }: { userEmail: string }) {
           <span className="text-sm text-neutral-500">{userEmail}</span>
           <button
             onClick={handleSignOut}
-            className="text-sm text-neutral-600 hover:text-neutral-900"
+            className="text-sm text-neutral-600 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-primary-300 rounded"
           >
             Sign out
           </button>

@@ -36,13 +36,15 @@ export default async function ProductsPage({
     query = query.or(`title.ilike.${searchTerm},sku.ilike.${searchTerm}`);
   }
 
-  const { data: products } = await query.order('title');
+  const { data: products, error: queryError } = await query.order('title');
+
+  if (queryError) return <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">Failed to load products. Please try again.</div>;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold">Products</h1>
-        <button className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-sm">
+        <button disabled title="Coming soon" className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm opacity-50 cursor-not-allowed">
           Sync Products
         </button>
       </div>
@@ -86,7 +88,7 @@ export default async function ProductsPage({
           </button>
         </div>
       ) : (
-        <div className="bg-white border border-neutral-200 rounded-lg overflow-hidden">
+        <div className="bg-white border border-neutral-200 rounded-lg overflow-x-auto">
           <table className="w-full">
             <thead className="bg-neutral-50 border-b border-neutral-200">
               <tr>

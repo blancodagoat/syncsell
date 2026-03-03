@@ -22,6 +22,18 @@ export default async function DashboardPage() {
 
   const connections = connectionsResult.data;
   const links = linksResult.data;
+
+  if (connectionsResult.error || linksResult.error) {
+    return (
+      <div>
+        <h1 className="text-2xl font-semibold mb-6">Dashboard</h1>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
+          Failed to load dashboard data. Please try again.
+        </div>
+      </div>
+    );
+  }
+
   const linkCount = links?.length ?? 0;
 
   return (
