@@ -28,22 +28,24 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-white">
       <div className="w-full max-w-sm">
-        <h1 className="text-2xl font-semibold mb-2">Inventory Sync</h1>
-        <p className="text-neutral-500 text-sm mb-6">Sign in to manage your inventory</p>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <h1 className="text-2xl font-semibold text-neutral-900 mb-2">Inventory Sync</h1>
+        <p className="text-neutral-600 text-sm mb-6">Sign in to your account</p>
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-1">
               Email
             </label>
             <input
               id="email"
+              name="email"
               type="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-neutral-300 rounded-lg"
+              className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-700 focus:ring-offset-0 focus:border-primary-700"
             />
           </div>
           <div>
@@ -52,26 +54,34 @@ export default function LoginForm() {
             </label>
             <input
               id="password"
+              name="password"
               type="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-neutral-300 rounded-lg"
+              className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-700 focus:ring-offset-0 focus:border-primary-700"
             />
           </div>
           {error && (
-            <p className="text-sm text-red-600">{error}</p>
+            <p role="alert" className="text-sm text-red-600">{error}</p>
           )}
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+            className="w-full py-2.5 bg-primary-700 text-white font-medium rounded-lg hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-700 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
-        <p className="mt-6 text-sm text-neutral-500 text-center">
-          No account? <Link href="/signup" className="text-primary-600 hover:underline">Sign up</Link>
+        <p className="mt-6 text-sm text-neutral-600 text-center">
+          No account?{' '}
+          <Link
+            href="/signup"
+            className="text-neutral-700 underline hover:text-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-700 focus:ring-offset-2 rounded"
+          >
+            Sign up
+          </Link>
         </p>
       </div>
     </div>

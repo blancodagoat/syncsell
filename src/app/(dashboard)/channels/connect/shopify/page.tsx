@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { initiateOAuth } from '@/app/actions/oauth';
 
@@ -9,7 +8,6 @@ export default function ConnectShopifyPage() {
   const [shopDomain, setShopDomain] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
   const supabase = createClient();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -30,9 +28,7 @@ export default function ConnectShopifyPage() {
       return;
     }
 
-    // TODO: OAuth callback at /api/shopify/callback needs to be implemented
-    // The callback should handle the DB insert after successful OAuth exchange
-    await initiateOAuth('shopify', domain, '');
+    await initiateOAuth('shopify', domain);
   }
 
   return (

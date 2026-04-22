@@ -1,15 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { initiateOAuth } from '@/app/actions/oauth';
 
 export default function ConnectEtsyPage() {
-  const [apiKey, setApiKey] = useState('');
   const [shopName, setShopName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
   const supabase = createClient();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -17,15 +15,8 @@ export default function ConnectEtsyPage() {
     setError(null);
     setLoading(true);
 
-    // TODO: API key should be stored via a server-side API route with encryption,
-    // not directly from the client. This is a known security issue.
-    if (apiKey.trim().length < 10 || apiKey.trim().length > 256) {
-      setError('API key must be between 10 and 256 characters');
-      setLoading(false);
-      return;
-    }
-
-    if (shopName.trim().length < 2) {
+    const shop = shopName.trim();
+    if (shop.length < 2) {
       setError('Shop name must be at least 2 characters');
       setLoading(false);
       return;
@@ -38,24 +29,7 @@ export default function ConnectEtsyPage() {
       return;
     }
 
-    const { error: insertError } = await supabase
-      .from('channel_connections')
-      .insert({
-        user_id: user.id,
-        channel_type: 'etsy',
-        shop_domain: shopName.trim(),
-        access_token: apiKey.trim(),
-      });
-
-    setLoading(false);
-
-    if (insertError) {
-      setError(insertError.message);
-      return;
-    }
-
-    router.push('/channels');
-    router.refresh();
+    await initiateOAuth('etsy', shop);
   }
 
   return (
@@ -81,32 +55,6 @@ export default function ConnectEtsyPage() {
           />
         </div>
 
-        <div>
-          <label htmlFor="apiKey" className="block text-sm font-medium text-neutral-700 mb-1">
-            Etsy API Key
-          </label>
-          <input
-            id="apiKey"
-            type="password"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            placeholder="Enter your Etsy API key"
-            required
-            className="w-full px-3 py-2 border border-neutral-300 rounded-lg"
-          />
-          <p className="text-xs text-neutral-500 mt-1">
-            Get your API key from{' '}
-            <a 
-              href="https://www.etsy.com/developers/your-apps" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-primary-600 hover:underline"
-            >
-              Etsy Developer Portal
-            </a>
-          </p>
-        </div>
-
         {error && (
           <p className="text-sm text-red-600">{error}</p>
         )}
@@ -116,7 +64,7 @@ export default function ConnectEtsyPage() {
           disabled={loading}
           className="w-full py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
         >
-          {loading ? 'Connecting...' : 'Connect Etsy'}
+          {loading ? 'Redirecting to Etsy...' : 'Connect with Etsy'}
         </button>
       </form>
     </div>
